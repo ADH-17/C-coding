@@ -3,29 +3,35 @@
 
 array_Add:
 
-                            # rdi is the first array of integers
-                            # rsi is the second array of integers
-                            # rdx is the result
-                            # rcx is the length of the arrays
-                            # r12 is the index
+                                # rdi is the first array of integers
+                                # rsi is the second array of integers
+                                # rdx is the result
+                                # rcx is the length of the arrays
+                                # r12 is the index
+                                # rax is what is returned
 
-cmpq $0, %rcx               # length - 0
-jz _done                    # jump to done if length is 0
+cmpq $0, %rcx                   # length - 0
+jz _sizeZero                    # jump to done if length is 0
 
-movl $0, %eax               # Set default value as 0 
-xorq %r12, %r12             # make sure the index is set to 0 
+xorq %r12, %r12                 # make sure the index is set to 0 
+movl $0, %eax                   # set default
 
 _add: 
-cmpq %rcx, %r12             # size - index
-jge _done                   # if size is = index or less, be done
+cmpq %rcx, %r12                 # index - size
+jge _done                       # if size is = index or greater, be done
 
-movq (%rdi, %r12, 8), %r13  # move the value of the index of the first array into %r13
-movq (%rsi, %r12, 8), %r14  # move the value of the second array at index to %r14
+movl (%rdi, %r12, 4), %r13d     # move the value of the index of the first array into %r13d
+movl (%rsi, %r12, 4), %r14d     # move the value of the second array at index to %r14d
 
-addq %r14 , %r13            # arr1[i] + arr2[i] stored in %r13
-movq %r13, (%rax, %r12, 8)  # move the value into %rax at the current index
-incq %r12                   # incriment the index by one
+addl %r14d , %r13d              # arr1[i] + arr2[i] stored in %r13
+movl %r13d, (%rdx, %r12, 4)     # move the value into %rdx at the current index
+incq %r12                       # incriment the index by one
 jmp _add
 
+_sizeZero:
+movq $0, %rax                   # if the array is empty then return default which is 0
+jmp _done
+
 _done:
-    ret                     # returns %rax
+movq %rdx, %rax                 # put return into %rax so it is returned
+ret                             # returns %rax

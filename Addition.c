@@ -3,7 +3,7 @@
 void array_Add(int op1[], int op2[], int result[], int length);
 int array1[] = {1,2,3};
 int array2[] = {1,2,3};
-int result[] = {0,0,0};
+int result[3];
 int length = 3;
 
 int main(){
