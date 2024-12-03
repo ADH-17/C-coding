@@ -11,10 +11,9 @@ array_Add:
                                 # rax is what is returned
 
 cmpq $0, %rcx                   # length - 0
-jz _sizeZero                    # jump to done if length is 0
+jz _done                        # if length is 0 then it jumps to done
 
 xorq %r12, %r12                 # make sure the index is set to 0 
-movl $0, %eax                   # set default
 
 _add: 
 cmpq %rcx, %r12                 # index - size
@@ -27,10 +26,6 @@ addl %r14d , %r13d              # arr1[i] + arr2[i] stored in %r13
 movl %r13d, (%rdx, %r12, 4)     # move the value into %rdx at the current index
 incq %r12                       # incriment the index by one
 jmp _add
-
-_sizeZero:
-movq $0, %rax                   # if the array is empty then return default which is 0
-jmp _done
 
 _done:
 movq %rdx, %rax                 # put return into %rax so it is returned
